@@ -1,4 +1,66 @@
-# Terraform Module: [MODULE_NAME]
+# ECS Cluster Module
+
+Creates an ECS Fargate cluster with Container Insights enabled and CloudWatch logging.
+
+## Features
+
+- 🚀 **ECS Fargate Cluster**: Serverless container orchestration
+- 📊 **Container Insights**: Enhanced monitoring and observability
+- 📝 **CloudWatch Logs**: Centralized log aggregation
+- 💰 **Fargate Spot**: Cost optimization with spot capacity
+- 🏷️ **Tagging**: Comprehensive resource tagging support
+
+## Resources Created
+
+- ECS Cluster with Container Insights enabled
+- Capacity providers (Fargate and Fargate Spot)
+- CloudWatch Log Group for ECS tasks
+
+## Usage
+
+```hcl
+module "ecs_cluster" {
+  source = "git::https://github.com/h3ow3d/h3ow3d-infra-ecs-cluster.git?ref=v1.0.0"
+
+  project_name       = "myapp"
+  environment        = "production"
+  log_retention_days = 30
+
+  tags = {
+    Project     = "myapp"
+    Environment = "production"
+    ManagedBy   = "terraform"
+  }
+}
+```
+
+## Examples
+
+- [**Basic**](./examples/basic/): Minimal ECS cluster for development
+- [**Complete**](./examples/complete/): Production-ready configuration
+
+## Requirements
+
+- Terraform >= 1.14.1
+- AWS Provider >= 6.0
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|----------|
+| project_name | Project name for resource naming | string | - | yes |
+| environment | Environment name | string | - | yes |
+| log_retention_days | CloudWatch log retention in days | number | 7 | no |
+| tags | Additional tags | map(string) | {} | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| cluster_id | ID of the ECS cluster |
+| cluster_name | Name of the ECS cluster |
+| cluster_arn | ARN of the ECS cluster |
+| log_group_name | Name of the CloudWatch log group |
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -6,11 +68,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.14.1 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0 |
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.25.0 |
 
 ## Modules
 
@@ -18,96 +82,27 @@ No modules.
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [aws_cloudwatch_log_group.ecs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
+| [aws_ecs_cluster.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_cluster) | resource |
+| [aws_ecs_cluster_capacity_providers.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_cluster_capacity_providers) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment name (production, staging, development) | `string` | n/a | yes |
+| <a name="input_log_retention_days"></a> [log\_retention\_days](#input\_log\_retention\_days) | CloudWatch log retention in days | `number` | `7` | no |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Project name used for resource naming | `string` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | Additional tags to apply to all resources | `map(string)` | `{}` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Additional tags to apply to resources | `map(string)` | `{}` | no |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_cluster_arn"></a> [cluster\_arn](#output\_cluster\_arn) | ARN of the ECS cluster |
+| <a name="output_cluster_id"></a> [cluster\_id](#output\_cluster\_id) | ID of the ECS cluster |
+| <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | Name of the ECS cluster |
+| <a name="output_log_group_name"></a> [log\_group\_name](#output\_log\_group\_name) | Name of the CloudWatch log group |
 <!-- END_TF_DOCS -->
-
-## Overview
-
-[Brief description of what this module does]
-
-## Features
-
-- ✅ Feature 1
-- ✅ Feature 2
-- ✅ Feature 3
-
-## Prerequisites
-
-- Terraform >= 1.14.1
-- AWS Provider >= 5.0
-
-## Usage
-
-### Basic Example
-
-```hcl
-module "example" {
-  source = "git::https://github.com/h3ow3d/[MODULE_NAME].git?ref=v1.0.0"
-
-  # Required variables
-  project_name = "myproject"
-  environment  = "production"
-
-  # Optional variables
-  tags = {
-    Team = "Platform"
-  }
-}
-```
-
-### Advanced Example
-
-```hcl
-module "example_advanced" {
-  source = "git::https://github.com/h3ow3d/[MODULE_NAME].git?ref=v1.0.0"
-
-  project_name = "myproject"
-  environment  = "production"
-
-  # Advanced configuration
-  # Add module-specific examples
-}
-```
-
-## Examples
-
-See the [examples/](./examples/) directory for complete working examples:
-
-- [basic](./examples/basic/) - Minimal configuration
-- [complete](./examples/complete/) - Full-featured setup
-
-## Module Documentation
-
-<!-- terraform-docs will inject detailed docs here -->
-
-## Versioning
-
-This module follows [Semantic Versioning](https://semver.org/):
-
-- **MAJOR** version for incompatible API changes
-- **MINOR** version for new functionality (backward compatible)
-- **PATCH** version for bug fixes
-
-## Contributing
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for development guidelines.
-
-## License
-
-MIT License - see [LICENSE](./LICENSE) for details.
-
-## Changelog
-
-See [CHANGELOG.md](./CHANGELOG.md) for release history.
